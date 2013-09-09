@@ -22,11 +22,26 @@ class Record
   property :filepath,     Text
 end
 
+module DataMapper
+  module Model
+    def update_or_create(conditions = {}, attributes = {}, merger = true)
+      begin
+        if (row = first(conditions))
+          row.update(attributes)
+          row
+        else
+          create(merger ? (conditions.merge(attributes)) : attributes )
+        end
+      rescue
+        false
+      end
+    end
+  end # Module Model
+end # Module DataMapper
+
 DataMapper.finalize
 #DataMapper.auto_migrate!
 DataMapper.auto_upgrade!
-
-count = 0
 
 CSV.parse(File.open(ARGV[0], 'r:iso-8859-1:utf-8'){|f| f.read}, col_sep: ',', headers: true)  do |row|
   
@@ -41,29 +56,29 @@ CSV.parse(File.open(ARGV[0], 'r:iso-8859-1:utf-8'){|f| f.read}, col_sep: ',', he
   
 end
 
-#module DataMapper
-#  module Model
-#    def update_or_create(conditions = {}, attributes = {}, merger = true)
-#      begin
-#        if (row = first(conditions))
-#          row.update(attributes)
-#          row
-#        else
-#          create(merger ? (conditions.merge(attributes)) : attributes )
-#        end
-#      rescue
-#        false
-#      end
-#    end
-#  end # Module Model
-#end # Module DataMapper
+module DataMapper
+  module Model
+    def update_or_create(conditions = {}, attributes = {}, merger = true)
+      begin
+        if (row = first(conditions))
+          row.update(attributes)
+          row
+        else
+          create(merger ? (conditions.merge(attributes)) : attributes )
+        end
+      rescue
+        false
+      end
+    end
+  end # Module Model
+end # Module DataMapper
  
-CSV.read("filepath.csv", "r:ISO-8859-15:UTF-8").each do |d|
+CSV.read("/Users/jonathancunningham/Desktop/nsrl/filepath-short.csv", "r:ISO-8859-15:UTF-8").each do |d|
   hash = d[0]
   metadata = d[1]
 
-  p hash
-  p metadata
+  p "hash = " + hash
+  p "metadata = " + metadata
   Record.update_or_create({:hash => hash}, {:hash => hash, :metadata => metadata})
  
 end
