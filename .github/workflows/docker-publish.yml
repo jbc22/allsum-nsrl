@@ -1,0 +1,35 @@
+name: Build and Push Flask Container
+
+on:
+  push:
+    branches:
+      - master  # Trigger on master branch commits
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Log in to GitHub Container Registry
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Build and tag the container image
+      - name: Build and Tag Image
+        run: |
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/allsum-nsrl:latest"
+          docker build -t $IMAGE_NAME .
+
+      # Push the image to GHCR
+      - name: Push Image
+        run: |
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/allsum-nsrl:latest"
+          docker push $IMAGE_NAME
