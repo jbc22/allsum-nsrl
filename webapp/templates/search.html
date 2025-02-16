@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        /* Light mode styles */
+        body {
+            background-color: white;
+            color: black;
+        }
+        /* Dark mode styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: white;
+            }
+            input, button {
+                background-color: #333;
+                color: white;
+                border: 1px solid #555;
+            }
+            a {
+                color: #bb86fc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Search the NIST NSRL Database</h1>
+        <form action="/" method="post">
+            <input type="text" name="term" placeholder="Enter search term">
+            <button type="submit">Search</button>
+        </form>
+        <br>
+        <a href="/signup">Sign Up</a> | 
+        <a href="/api-docs">API Documentation</a> | 
+        <a href="/api-docs">About</a>
+    </center>
+</body>
+</html>
